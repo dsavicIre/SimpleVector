@@ -1,28 +1,32 @@
 import numpy as np
 
+# lets make some basic Vector DB scaffolding 
 class VectorDatabase:
     def __init__(self):
         # Dictionary to hold vectors with unique IDs
         self.vectors = {}
 
     def add_vector(self, vector_id, vector):
-        # Add a vector with a unique ID
+        # Add a vector with ID
         self.vectors[vector_id] = np.array(vector)
 
     def get_vector(self, vector_id):
-        # Retrieve a vector by its ID
+        # Get a vector by its ID
         return self.vectors.get(vector_id, None)
 
     def delete_vector(self, vector_id):
-        # Remove a vector by its ID
+        # Delete a vector by its ID
         if vector_id in self.vectors:
             del self.vectors[vector_id]
 
     def search(self, query_vector, top_k=1):
-        # Calculate cosine similarity and return top K similar vectors
+       
         query_vector = np.array(query_vector)
         similarities = {}
-
+        
+        # Calculate cosine similarity and return top K similar vectors
+        # this is interesting part where you can introduce different ways (function, in this case cosine) to measure
+        # distance between vectors.
         for vec_id, vector in self.vectors.items():
             similarity = self.cosine_similarity(query_vector, vector)
             similarities[vec_id] = similarity
@@ -39,15 +43,15 @@ class VectorDatabase:
         norm_b = np.linalg.norm(vec2)
         return dot_product / (norm_a * norm_b)
 
-# Example usage:
+# Create vector DB
 vector_db = VectorDatabase()
 
-# Adding vectors
+# Adding vectors in the db for search
 vector_db.add_vector("vec1", [1, 2, 3])
 vector_db.add_vector("vec2", [4, 5, 6])
 vector_db.add_vector("vec3", [7, 8, 9])
 
-# Searching for similar vectors
+# Searching for similar vectors is simple as this :)
 query = [1, 3, 3]
 results = vector_db.search(query, top_k=2)
 
